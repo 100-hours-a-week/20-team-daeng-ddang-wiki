@@ -1,0 +1,50 @@
+name: Bug report to Discord
+
+on:
+  issues:
+    types: [opened]
+
+permissions:
+  contents: read
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+
+    if: contains(join(github.event.issue.labels.*.name, ','), 'bug-report')
+
+    steps:
+      - name: Send to Discord
+        env:
+          DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
+          REPO: ${{ github.repository }}
+          ISSUE_NUMBER: ${{ github.event.issue.number }}
+          ISSUE_TITLE: ${{ github.event.issue.title }}
+          ISSUE_URL: ${{ github.event.issue.html_url }}
+          ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
+          ISSUE_BODY: ${{ github.event.issue.body }}
+        run: |
+          BODY_TRIMMED="$(printf "%s" "$ISSUE_BODY" | head -c 800)"
+
+          payload=$(jq -n \
+            --arg content "" \
+            --arg title "$ISSUE_TITLE" \
+            --arg url "$ISSUE_URL" \
+            --arg author "$ISSUE_AUTHOR" \
+            --arg repo "$REPO" \
+            --arg number "$ISSUE_NUMBER" \
+            --arg body "$BODY_TRIMMED" \
+            '{
+              "embeds": [{
+                "title": ("#"+$number+" "+$title),
+                "url": $url,
+                "description": $body,
+                "fields": [
+                  {"name": "Repo", "value": $repo, "inline": true},
+                  {"name": "Author", "value": $author, "inline": true}
+                ]
+              }]
+            }'
+          )
+
+          curl -sS -X POST -H "Content-Type: application/json" --data-binary "$JSON_PAYLOAD" "$DISCORD_WEBHOOK_URL" || true
