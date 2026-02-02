@@ -17,34 +17,29 @@ jobs:
       - name: Send to Discord
         env:
           DISCORD_WEBHOOK_URL: ${{ secrets.DISCORD_WEBHOOK_URL }}
-          REPO: ${{ github.repository }}
           ISSUE_NUMBER: ${{ github.event.issue.number }}
           ISSUE_TITLE: ${{ github.event.issue.title }}
           ISSUE_URL: ${{ github.event.issue.html_url }}
           ISSUE_AUTHOR: ${{ github.event.issue.user.login }}
           ISSUE_BODY: ${{ github.event.issue.body }}
+          ISSUE_CREATED_AT: ${{ github.event.issue.created_at }}
         run: |
           BODY_TRIMMED="$(printf "%s" "$ISSUE_BODY" | head -c 800)"
 
-          payload=$(jq -n \
-            --arg content "" \
-            --arg title "$ISSUE_TITLE" \
-            --arg url "$ISSUE_URL" \
-            --arg author "$ISSUE_AUTHOR" \
-            --arg repo "$REPO" \
-            --arg number "$ISSUE_NUMBER" \
-            --arg body "$BODY_TRIMMED" \
-            '{
-              "embeds": [{
-                "title": ("#"+$number+" "+$title),
-                "url": $url,
-                "description": $body,
-                "fields": [
-                  {"name": "Repo", "value": $repo, "inline": true},
-                  {"name": "Author", "value": $author, "inline": true}
-                ]
-              }]
-            }'
+          JSON_PAYLOAD=$(cat <<JSON
+          {
+            "thread_name": "[#${ISSUE_NUMBER}] ${ISSUE_TITLE}",
+            "embeds": [{
+              "title": "${ISSUE_TITLE}",
+              "url": "${ISSUE_URL}",
+              "description": "${BODY_TRIMMED}",
+              "fields": [
+                {"name": "Actor", "value": "${ISSUE_AUTHOR}", "inline": true},
+              ],
+              "timestamp": "${ISSUE_CREATED_AT}"
+            }]
+          }
+          JSON
           )
 
           curl -sS -X POST -H "Content-Type: application/json" --data-binary "$JSON_PAYLOAD" "$DISCORD_WEBHOOK_URL" || true
