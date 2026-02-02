@@ -25,7 +25,7 @@ jobs:
         run: |
           JSON_PAYLOAD=$(cat <<JSON
           {
-            "thread_name": "[#${ISSUE_NUMBER}] ${ISSUE_TITLE}",
+            "thread_name": "${ISSUE_TITLE} (#${ISSUE_NUMBER})",
             "embeds": [{
               "title": "${ISSUE_TITLE}",
               "url": "${ISSUE_URL}",
