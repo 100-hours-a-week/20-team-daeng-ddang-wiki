@@ -30,7 +30,7 @@ jobs:
               "title": "${ISSUE_TITLE}",
               "url": "${ISSUE_URL}",
               "fields": [
-                {"name": "Actor", "value": "${ISSUE_AUTHOR}", "inline": true},
+                {"name": "Actor", "value": "${ISSUE_AUTHOR}", "inline": true}
               ],
               "timestamp": "${ISSUE_CREATED_AT}"
             }]
