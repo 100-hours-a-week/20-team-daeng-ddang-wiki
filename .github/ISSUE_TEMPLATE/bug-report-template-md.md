@@ -1,8 +1,8 @@
 ---
 name: bug-report-template.md
 about: QA, 운영 중 발견한 버그 리포트 템플릿
-title: "[BUG] 버그 요약 (해당 버그를 처리할 Assignees와 bug 혹은 bug-warning을 등록하세요)"
-labels: bug, bug-warning
+title: "[BUG] 버그 요약 (해당 버그를 처리할 Assignees를 지정해주세요)"
+labels: bug-report
 assignees: ''
 
 ---
