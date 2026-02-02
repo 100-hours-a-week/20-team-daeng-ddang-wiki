@@ -2,7 +2,7 @@ name: Bug report to Discord
 
 on:
   issues:
-    types: [opened]
+    types: [opened, reopened]
 
 permissions:
   contents: read
