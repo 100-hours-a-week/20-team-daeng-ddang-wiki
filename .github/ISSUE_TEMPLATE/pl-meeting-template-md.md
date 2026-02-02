@@ -2,8 +2,8 @@
 name: pl-meeting-template.md
 about: PL미팅 전에 작성하는 템플릿
 title: ''
-labels: meeting
-assignees: kaa08, kmi0817, KWAKMANBO, JadeLee01, Dindory, yeonjung77
+labels: ''
+assignees: Dindory, JadeLee01, kaa08, kmi0817, KWAKMANBO, yeonjung77
 
 ---
 
