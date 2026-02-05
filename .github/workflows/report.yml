@@ -11,7 +11,9 @@ jobs:
   notify:
     runs-on: ubuntu-latest
 
-    if: contains(join(github.event.issue.labels.*.name, ','), 'bug-report')
+    if: |
+      contains(join(github.event.issue.labels.*.name, ','), 'bug-report') ||
+      contains(join(github.event.issue.labels.*.name, ','), 'QA-report')
 
     steps:
       - name: Send to Discord
